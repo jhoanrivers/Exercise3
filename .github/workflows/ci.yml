@@ -1,0 +1,36 @@
+name: CI
+
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Unit Test
+        run: ./gradlew testDebugUnitTest
+
+
+  build:
+    steps:
+      - name: Build Apk Debug
+        run: ./gradlew assembleDebug
+
+      - name: Upload Apk debug
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug
+          path: app/build/outputs/**
